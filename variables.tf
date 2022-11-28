@@ -15,6 +15,10 @@ variable "private_subnet" {
   description = "Subnets info"
 }
 
+variable "vpc_extra_cidr" {
+  description = "Extra CIDRs for VPC"
+}
+
 variable "public_subnet" {
   type = map(object({
     subnet_cidr_block = string

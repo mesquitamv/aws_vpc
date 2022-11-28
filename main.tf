@@ -4,11 +4,19 @@ resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
 }
 
+resource "aws_vpc_ipv4_cidr_block_association" "ipv4_cidr_block_association" {
+  count      = length(var.vpc_extra_cidr)
+  vpc_id     = aws_vpc.vpc.id
+  cidr_block = var.vpc_extra_cidr[count.index]
+}
+
 resource "aws_subnet" "private_subnet" {
   for_each          = var.private_subnet
   cidr_block        = each.value["subnet_cidr_block"]
   availability_zone = each.value["availability_zone"]
   vpc_id            = aws_vpc.vpc.id
+  
+  depends_on        = [aws_vpc_ipv4_cidr_block_association.ipv4_cidr_block_association]
 }
 
 resource "aws_subnet" "public_subnet" {
@@ -17,6 +25,8 @@ resource "aws_subnet" "public_subnet" {
   availability_zone       = each.value["availability_zone"]
   vpc_id                  = aws_vpc.vpc.id
   map_public_ip_on_launch = true
+
+  depends_on        = [aws_vpc_ipv4_cidr_block_association.ipv4_cidr_block_association]
 }
 
 resource "aws_internet_gateway" "gw" {

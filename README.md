@@ -9,6 +9,7 @@ module "aws_vpc" {
   source = "aws_vpc"
   
   vpc_cidr       = # CIDR of VPC
+  vpc_extra_cidr = # List of extra CIDRs to add to VPC
   aws_region     = # Region that will be used
   private_subnet = # Map of private subnet specs
   public_subnet  = # Map of public subnet specs
@@ -20,6 +21,7 @@ module "aws_vpc" {
   source = "aws_vpc"
   
   vpc_cidr       = 10.0.0.0/16
+  vpc_extra_cidr = ["10.1.0.0/16", "10.2.0.0/16"]
   aws_region     = us-east-1
   private_subnet = map-private-subnets
   public_subnet  = map-public-subnets
